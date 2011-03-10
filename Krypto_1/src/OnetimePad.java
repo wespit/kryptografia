@@ -35,6 +35,8 @@ public class OnetimePad {
 		binaryEnc.xor(binaryKey);
 		return binaryEnc;
 	}
+	
+	
 	private String encryptASCII () {
 		String asciiEnc = new String();
 		for (int i=0; i<asciiData.length(); i++) {
@@ -44,6 +46,7 @@ public class OnetimePad {
 		}
 		return asciiEnc;
 	}
+	
 	private BitSet decryptBin() {
 		BitSet binaryDec = new BitSet(binaryData.size());
 		for ( int i=0; i< binaryData.size(); i++) {
@@ -53,6 +56,8 @@ public class OnetimePad {
 		binaryDec.xor(binaryKey);
 		return binaryDec;
 	}
+	
+	
 	private String decryptASCII() {
 		String asciiDec=new String();
 		for (int i=0; i<asciiData.length(); i++) {
@@ -93,6 +98,7 @@ public class OnetimePad {
 						}
 					}
 				}
+				System.out.println(binaryData.size());
 				in.close();
 			}
 		} catch (FileNotFoundException e) {e.printStackTrace();
@@ -131,11 +137,13 @@ public class OnetimePad {
 		} else {
 			String keytmp = new String();
 			keytmp=""+key;
-			while (keytmp.length()*8 < binaryData.length() ) {
+			while (keytmp.length()*8 <= binaryData.length() ) {
 				keytmp=keytmp+key;
 			}
-			binaryKey = new BitSet(keytmp.length()*8);
-			for ( int i=0; i<keytmp.length(); i++) {
+//			System.out.println("binary data"+binaryData.size());
+//			System.out.println("keytmp"+keytmp.length());
+			binaryKey = new BitSet(binaryData.length());
+			for ( int i=0; i<binaryData.length()/8; i++) {
 				byte b =(byte) keytmp.charAt(i);
 				for ( int j=0; j<8; j++) {
 					if ((((b >> j) & 1) == 1)) {
@@ -145,6 +153,7 @@ public class OnetimePad {
 			}
 			//System.out.println("BINARYKEY=="+bitsetToString(binaryKey));
 			binaryEncoded = encryptBin();
+//			System.out.println(binaryEncoded.size());
 		}
 		
 	}
@@ -161,11 +170,13 @@ public class OnetimePad {
 		} else {
 			String keytmp = new String();
 			keytmp=""+key;
-			while ( keytmp.length()*8 < binaryData.length()) {
+			while ( keytmp.length()*8 <= binaryData.length()) {
 				keytmp=keytmp+key;
 			}
-			binaryKey = new BitSet(keytmp.length()*8);
-			for ( int i=0; i<keytmp.length(); i++) {
+//			System.out.println("binary data"+binaryData.size());
+//			System.out.println("keytmp"+keytmp.length());
+			binaryKey = new BitSet(binaryData.length());
+			for ( int i=0; i<binaryData.length()/8; i++) {
 				byte b =(byte) keytmp.charAt(i);
 				for ( int j=0; j<8; j++) {
 					if ((((b >> j) & 1) == 1)) {
@@ -173,7 +184,6 @@ public class OnetimePad {
 					}
 				}
 			}
-			
 			binaryDecoded = decryptBin();
 		}
 	}
@@ -207,7 +217,6 @@ public class OnetimePad {
 	}
 	public void setMode(EncryptionMode binary) {
 		this.mode = binary;
-		
 	}
 	
 	

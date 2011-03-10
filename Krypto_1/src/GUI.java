@@ -75,9 +75,9 @@ public class GUI {
 		out.setMinimumSize(out.getSize());
 		
 		inFileName = new JLabel("no file");
-		inFileName.setMinimumSize(new Dimension(100,20));
+		inFileName.setMinimumSize(new Dimension(200,20));
 		outFileName = new JLabel("no file");
-		outFileName.setMinimumSize(new Dimension(100,20));
+		outFileName.setMinimumSize(new Dimension(200,20));
 		
 		encDec = new JLabel("Co chcesz zrobic? ");
 		binASCII = new JLabel("Sposób odczytu/zapisu: ");
@@ -169,8 +169,8 @@ public class GUI {
 		
 		
 		frame.pack();
-		frame.setSize(700, 300);
-		frame.setMinimumSize(new Dimension(550, 200));
+		frame.setSize(760, 300);
+		frame.setMinimumSize(new Dimension(700, 200));
 
 		
 	}
@@ -245,8 +245,8 @@ public class GUI {
 					
 					if ( !key.getText().isEmpty()) {
 						if (inFile.getSelectedFile() != null) {
-							otp.getDataFromFile(inFile.getSelectedFile());
 							otp.setMode(ascii.isSelected()?EncryptionMode.ASCII:EncryptionMode.Binary);
+							otp.getDataFromFile(inFile.getSelectedFile());
 							in.setText(otp.getMode()==
 								EncryptionMode.ASCII?
 									otp.getAsciiData():
@@ -269,12 +269,25 @@ public class GUI {
 								if (otp.getMode() == EncryptionMode.ASCII) {
 									out.setText(otp.getAsciiEncoded());
 									OutputStreamWriter o= new OutputStreamWriter(new FileOutputStream(outFilef));
-									o.write(out.getText());
+									String s = out.getText(0,out.getText().length());
+									o.write(s);
+									o.close();
+									File ff = new File (outFilef.getAbsoluteFile()+".key");
+									ff.createNewFile();
+									o = new OutputStreamWriter(new FileOutputStream(ff));
+									o.write(key.getText());
 									o.close();
 								} else {
 									out.setText(otp.bitsetToString(otp.getBinaryEncoded()));
 									OutputStreamWriter o= new OutputStreamWriter(new FileOutputStream(outFilef));
-									o.write(otp.binaryToString(otp.getBinaryEncoded()));
+									String s = otp.binaryToString(otp.getBinaryEncoded());
+									s=s.substring(0,s.length());
+									o.write(s);
+									o.close();
+									File ff = new File (outFilef.getAbsoluteFile()+".key");
+									ff.createNewFile();
+									o = new OutputStreamWriter(new FileOutputStream(ff));
+									o.write(key.getText());
 									o.close();
 								}
 							} else if (dec.isSelected()) {
@@ -283,12 +296,15 @@ public class GUI {
 								if (otp.getMode() == EncryptionMode.ASCII) {
 									out.setText(otp.getAsciiDecoded());
 									OutputStreamWriter o= new OutputStreamWriter(new FileOutputStream(outFilef));
-									o.write(out.getText());
+									String s = out.getText(0,out.getText().length());
+									o.write(s);
 									o.close();
 								} else {
 									out.setText(otp.bitsetToString(otp.getBinaryDecoded()));
 									OutputStreamWriter o= new OutputStreamWriter(new FileOutputStream(outFilef));
-									o.write(otp.binaryToString(otp.getBinaryDecoded()));
+									String s = otp.binaryToString(otp.getBinaryDecoded());
+									s=s.substring(0,s.length());
+									o.write(s);
 									o.close();
 								}
 							}
